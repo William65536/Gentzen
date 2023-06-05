@@ -1,1 +1,1 @@
-# Gentzen
+# Gentzen: A Query Engine

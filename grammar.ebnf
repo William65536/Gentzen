@@ -1,0 +1,17 @@
+program = ( assertion | query | remark )*
+assertion = expression-list "."
+query = expression-list "?"
+remark = expression-list "!"
+expression-list = expression ( "," expression )*
+expression = equality
+equality = implication ( "=" implication )*
+implication = disjunction ( ( "<-" | "<->" | "->" ) implication )?
+disjunction = conjunction ( "|" conjunction )*
+conjunction = negation ( "&" negation )*
+negation = "~"* atom
+atom = IDENTIFIER | BOOLEAN | "(" expression ")" | "[" expression "]"
+
+IDENTIFIER = ( "A".."z" | "_" ) ( "A".."z" | "_" | "0".."9" )*
+BOOLEAN = "0" | "1"
+
+# `expression` is superfluous; it is only included for semantic reasons.
