@@ -14,4 +14,4 @@ atom = IDENTIFIER | BOOLEAN | "(" expression ")" | "[" expression "]"
 IDENTIFIER = ( "A".."z" | "_" ) ( "A".."z" | "_" | "0".."9" )*
 BOOLEAN = "0" | "1"
 
-# `expression` is superfluous; it is only included for semantic reasons.
+# NOTE: `expression` is superfluous; it is only included for semantic reasons.
