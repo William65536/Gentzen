@@ -17,7 +17,7 @@ static void Token_print_arena(Token token) { Token_print(token, string_arena); }
 void print_error(const char *type, const char *format, ...)
 {
     assert(type != NULL);
-    assert(type != NULL);
+    assert(format != NULL);
 
     va_list args;
 
