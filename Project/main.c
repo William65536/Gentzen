@@ -1,14 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <assert.h>
 #include <stdarg.h>
 
 #include "Lexer\Token.h"
 #include "Lexer\Lexer.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "Lexer\Lexer.h"
+#include "Parser\ASTNode.h"
+#include "Parser\Parser.h"
 
 static charList *string_arena;
 
@@ -27,9 +26,14 @@ void print_error(const char *type, const char *format, ...)
     vfprintf(stderr, format, args);
 }
 
+/** TODO: Get rid of `=`---only support `<->` */
+/** TODO: Deprecate remarks */
+/** TODO: Add in better parser errors---use an expectation system */
+/** TODO: Track memory allocations or use Valgrind (or something similar) */
+
 int main(void)
 {
-    const char *const input = "a <->\n@b";
+    const char *const input = "~~(~~~(~(~(~p))))";
 
     string_arena = charList_new(100);
 
@@ -50,6 +54,19 @@ int main(void)
             goto TokenList_delete_and_failure;
     }
 
+    ASTNodeList *ast; {
+        ast = Parser_parse(TokenList_begin(tokens), string_arena);
+
+        if (ast == NULL) {
+            /** TODO: Change this */
+            print_error("APPLICATION ERROR", "Failed parse!\n");
+            goto TokenList_delete_and_failure;
+        }
+
+        ASTNode_println(ASTNodeList_size(ast) - 1, ast, string_arena);
+    }
+
+    ASTNodeList_delete(&ast);
     TokenList_delete(&tokens);
     charList_delete(&string_arena);
 

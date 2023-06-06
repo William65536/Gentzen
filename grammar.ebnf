@@ -11,7 +11,7 @@ conjunction = negation ( "&" negation )*
 negation = "~"* atom
 atom = IDENTIFIER | BOOLEAN | "(" expression ")" | "[" expression "]"
 
-IDENTIFIER = ( "A".."z" | "_" ) ( "A".."z" | "_" | "0".."9" )*
+IDENTIFIER = ( "A".."z" | "_" ) ( "A".."z" | "_" | "0".."9" | "'" )*
 BOOLEAN = "0" | "1"
 
 # NOTE: `expression` is superfluous; it is only included for semantic reasons.

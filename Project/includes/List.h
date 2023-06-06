@@ -31,6 +31,8 @@ void funcname(typename(T), println)(const typename(T) *self, void (*print)(T val
 
 void funcname(typename(T), shrink)(typename(T) *self, size_t newsize);
 
+void funcname(typename(T), swap)(typename(T) *self, size_t index_a, size_t index_b);
+
 #undef concat
 #undef typename
 #undef tricat

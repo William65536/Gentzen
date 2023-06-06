@@ -142,3 +142,14 @@ void funcname(typename(T), shrink)(typename(T) *self, size_t newsize)
 
     self->size = newsize;
 }
+
+void funcname(typename(T), swap)(typename(T) *self, size_t index_a, size_t index_b)
+{
+    assert(self != NULL);
+    assert(index_a < self->size);
+    assert(index_b < self->size);
+
+    T temp = self->data[index_a];
+    self->data[index_a] = self->data[index_b];
+    self->data[index_b] = temp;
+}

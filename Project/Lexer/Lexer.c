@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdbool.h>
 #include <assert.h>
 
@@ -218,7 +219,7 @@ TokenList *Lexer_lex(const char *input, charList *string_arena)
 
                     token.identifier = charList_size(string_arena);
 
-                    for (; isalpha(**itr) || isdigit(**itr) || **itr == '_'; ++*itr)
+                    for (; isalpha(**itr) || isdigit(**itr) || **itr == '_' || **itr == '\''; ++*itr)
                         if (!charList_push(string_arena, **itr))
                             goto failure;
 
