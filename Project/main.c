@@ -1,88 +1,51 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <assert.h>
-#include <stdarg.h>
+#define _USE_MATH_DEFINES
+#include <math.h>
 
-#include "Lexer\Token.h"
-#include "Lexer\Lexer.h"
+#include "includes\Image.h"
+#include "includes\LinearAlgebra.h"
+#include "Renderer\Solid.h"
 
-#include "Parser\ASTNode.h"
-#include "Parser\Parser.h"
-
-static charList *string_arena;
-
-static void Token_print_arena(Token token) { Token_print(token, string_arena); }
-
-void print_error(const char *type, const char *format, ...)
-{
-    assert(type != NULL);
-    assert(format != NULL);
-
-    va_list args;
-
-    va_start(args, format);
-
-    fprintf(stderr, "%s: ", type);
-    vfprintf(stderr, format, args);
-}
-
-/** TODO: Get rid of `=`---only support `<->` */
-/** TODO: Deprecate remarks */
-/** TODO: Add in better parser errors---use an expectation system */
-/** TODO: Track memory allocations or use Valgrind (or something similar) */
+/** TODO: Learn the intricacies of MakeFiles */
+/** TODO: Test `RangeList` */
 
 int main(void)
 {
-    const char *const input = "~~(~~~(~(~(~p))))";
+    const Color backgroundcolor = { .r = 212, .g = 204, .b = 167 };
 
-    string_arena = charList_new(100);
-
-    if (string_arena == NULL)
-        goto failure;
-
-    TokenList *tokens; {
-        tokens = Lexer_lex(input, string_arena);
-
-        if (tokens == NULL) {
-            print_error("APPLICATION ERROR", "Failed allocation!\n");
-            goto charList_delete_and_failure;
-        }
-
-        TokenList_println(tokens, Token_print_arena);
-
-        if (Lexer_has_errors(tokens, print_error))
-            goto TokenList_delete_and_failure;
-    }
-
-    ASTNodeList *ast; {
-        ast = Parser_parse(TokenList_begin(tokens), string_arena);
-
-        if (ast == NULL) {
-            /** TODO: Change this */
-            print_error("APPLICATION ERROR", "Failed parse!\n");
-            goto TokenList_delete_and_failure;
-        }
-
-        ASTNode_println(ASTNodeList_size(ast) - 1, ast, string_arena);
-    }
-
-    ASTNodeList_delete(&ast);
-    TokenList_delete(&tokens);
-    charList_delete(&string_arena);
-
-    return EXIT_SUCCESS;
-
+    Image *image = Image_new(1280, 720, malloc);
     {
-        TokenList_delete_and_failure:
+        Image_clear(image, backgroundcolor);
 
-        TokenList_delete(&tokens);
+        const Ellipsoid *const solid = Ellipsoid_new(
+            (Pos3) { .x = 0.0, .y = 0.0, .z = 1000.0 },
+            (Dim3) { .width = 100.0, .height = 100.0, .depth = 100.0 },
+            (Rot3) { .alpha = 0.0, .beta = M_PI_2, .gamma = 0.0 });
 
-        charList_delete_and_failure:
+        // Ellipsoid *const circles[2] = {
+        //     Ellipsoid_new(
+        //         (Vec3) { .x = 0.0, .y = -200.0, .z = 1000.0 },
+        //         (Dim3) { .width = 100.0, .height = 100.0, .depth = 100.0 },
+        //         (Rot3) { .alpha = 0.0, .beta = M_PI_2, .gamma = 0.0 }),
+        //     Ellipsoid_new(
+        //         (Vec3) { .x = 150.0, .y = -200.0, .z = 1000.0 },
+        //         (Dim3) { .width = 100.0, .height = 100.0, .depth = 100.0 },
+        //         (Rot3) { .alpha = 0.0, .beta = M_PI_2, .gamma = 0.0 })
+        // };
 
-        charList_delete(&string_arena);
+        // const Union *const solid = Union_new(circles[0], circles[1]);
 
-        failure:
+        Solid_render(solid, image, backgroundcolor);
 
-        return EXIT_FAILURE;
+        FILE *file = fopen("test.bmp", "wb");
+        {
+            Image_to_BMP(image, file);
+        }
+        fclose(file);
     }
+    Image_delete(&image, free);
+
+
+    return 0;
 }

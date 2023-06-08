@@ -1,23 +1,20 @@
-# TODO: Figure out how to clean files
-
 CC = clang
 FLAGS = -Wall -Wextra -Wpedantic -Werror -std=c17
-OBJS = Project/includes/charList.o Project/Lexer/Lexer.o Project/includes/TokenList.o Project/includes/ASTNodeList.o Project/Parser/Parser.o
+OBJ = Project/includes/Image.o Project/includes/LinearAlgebra.o Project/includes/IntervalList.o Project/Renderer/Solid.o
 
-main: Project/main.c $(OBJS)
-	$(CC) $(FLAGS) -o Project/main $(OBJS) Project/main.c
+# TODO: Clean out needless files
 
-charList: Project/includes/List.c
-	$(CC) -c $(FLAGS) -DT=char -o Project/includes/charList.o Project/includes/List.c
+main: Project/main.c $(OBJ)
+	$(CC) $(FLAGS) -o Project/main $(OBJ) Project/main.c -lm
 
-TokenList: Project/includes/List.c
-	$(CC) -c $(FLAGS) -DT=Token -o Project/includes/TokenList.o Project/includes/List.c
+Image: Project/includes/Image.c
+	$(CC) -c $(FLAGS) -o Project/includes/Image.o Project/includes/Image.c
 
-Lexer: Project/Lexer/Lexer.c
-	$(CC) -c $(FLAGS) -o Project/Lexer/Lexer.o Project/Lexer/Lexer.c
+LinearAlgebra: Project/includes/LinearAlgebra.c
+	$(CC) -c $(FLAGS) -o Project/includes/LinearAlgebra.o Project/includes/LinearAlgebra.c
 
-ASTNodeList:
-	$(CC) -c $(FLAGS) -DT=ASTNode -o Project/includes/ASTNodeList.o Project/includes/List.c
+IntervalList: Project/includes/List.c
+	$(CC) -c $(FLAGS) -DT=Interval -o Project/includes/IntervalList.o Project/includes/List.c
 
-Parser: Project/Parser/Parser.c
-	$(CC) -c $(FLAGS) -o Project/Parser/Parser.o Project/Parser/Parser.c
+Solid: Project/Renderer/Solid.c
+	$(CC) -c $(FLAGS) -o Project/Renderer/Solid.o Project/Renderer/Solid.c
